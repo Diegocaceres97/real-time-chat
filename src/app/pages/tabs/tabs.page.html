@@ -1,0 +1,20 @@
+<ion-tabs (ionTabsDidChange)="getSelectedTab($event)">
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="status">
+      <ion-icon [name]="selectedTab() === 'albums' ? 'albumsSharp' : 'albums-outline'"></ion-icon>
+      Status
+    </ion-tab-button>
+    <ion-tab-button tab="calls">
+      <ion-icon [name]="selectedTab() === 'calls' ? 'call' : 'call-outline'"></ion-icon>
+      Calls
+    </ion-tab-button>
+    <ion-tab-button tab="chats">
+      <ion-icon [name]="selectedTab() === 'chats' ? 'chatbubbles' : 'chatbox-outline'"></ion-icon>
+      Chats
+    </ion-tab-button>
+    <ion-tab-button tab="settings">
+      <ion-icon [name]="selectedTab() === 'settings' ? 'settings' : 'settings-outline'"></ion-icon>
+      Settings
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>
