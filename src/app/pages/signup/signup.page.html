@@ -1,0 +1,77 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div align="center" class="logo">
+    <ion-text color="primary"> FIRE CHAT </ion-text>
+  </div>
+
+  <ion-card class="ion-padding">
+    <form [formGroup]="form">
+
+      <ion-input
+        placeholder="name"
+        type="text"
+        class="ion-margin-bottom"
+        formArrayName="name"
+        errorText="*Please enter your name"
+      >
+        <ion-icon name="person-outline" slot="start" color="dark"></ion-icon
+      ></ion-input>
+
+
+      <ion-input
+        placeholder="email"
+        type="email"
+        class="ion-margin-bottom"
+        formArrayName="email"
+        errorText="*Please enter your email"
+      >
+        <ion-icon name="mail-outline" slot="start" color="dark"></ion-icon
+      ></ion-input>
+
+      <ion-input
+        placeholder="password"
+        type="text"
+        formControlName="password"
+        [errorText]="form.get('password')?.hasError('minlength') ? '*Password must be at least 6 characters long' : '*please enter your password'"
+      >
+        <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+        <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+      </ion-input>
+
+      <!--   <div align="right">
+          <ion-button fill="clear" size="small" color="medium">
+            Forgot password?
+          </ion-button>
+        </div> -->
+
+      @if(!isSignup()){
+      <ion-button
+        size="large"
+        expand="block"
+        type="submit"
+        class="ion-margin-top ion-padding-top"
+        [strong]="true"
+      >
+        <ion-text>Signup</ion-text>
+      </ion-button>
+      } @else {
+      <ion-button
+        size="large"
+        expand="block"
+        type="submit"
+        class="ion-margin-top ion-padding-top"
+        [strong]="true"
+      >
+        <ion-spinner name="crescent"> </ion-spinner>
+      </ion-button>
+      }
+    </form>
+  </ion-card>
+</ion-content>

@@ -1,0 +1,36 @@
+div.logo {
+  margin: 10vh 0;
+  ion-text {
+    font-size: 2.2rem;
+    font-weight: bold;
+
+    //font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+}
+
+ion-card {
+  ion-input {
+    font-size: 1rem;
+    ion-icon {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+ion-footer {
+  ion-toolbar {
+    --background: white;
+    div {
+      //vertical-align: --webkit-baseline-middle;
+      ion-text {
+        font-size: 0.8rem;
+
+      }
+      ion-button {
+        --padding-start: 0;
+        text-transform: none;
+        vertical-align: middle;
+      }
+    }
+  }
+}
