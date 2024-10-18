@@ -13,21 +13,21 @@
 
   <ion-card class="ion-padding">
     <form [formGroup]="form">
-
       <ion-input
         placeholder="name"
         type="text"
         class="ion-margin-bottom"
         formArrayName="name"
+        formControlName="name"
         errorText="*Please enter your name"
       >
         <ion-icon name="person-outline" slot="start" color="dark"></ion-icon
       ></ion-input>
 
-
       <ion-input
         placeholder="email"
         type="email"
+        formControlName="email"
         class="ion-margin-bottom"
         formArrayName="email"
         errorText="*Please enter your email"
@@ -58,6 +58,7 @@
         type="submit"
         class="ion-margin-top ion-padding-top"
         [strong]="true"
+        (click)="onSubmit()"
       >
         <ion-text>Signup</ion-text>
       </ion-button>
@@ -74,4 +75,12 @@
       }
     </form>
   </ion-card>
+  <ion-alert
+    [isOpen]="!!errorMessage()"
+    (didDismiss)="setErrorMessage(null)"
+    header="Alert"
+    [message]="errorMessage()"
+    [buttons]="['OK']"
+  >
+  </ion-alert>
 </ion-content>
