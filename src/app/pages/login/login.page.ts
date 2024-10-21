@@ -17,7 +17,10 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 export class LoginPage implements OnInit {
 
   form!: FormGroup;
+  fpForm!: FormGroup;
   isLogin = signal<boolean>(false);
+  isForgot = signal<boolean>(false);
+  isFPmodal = signal<boolean>(false);
   private router = inject(Router);
   private auth = inject(AuthService);
   errorMessage = signal<string | null>(null);
@@ -83,6 +86,47 @@ export class LoginPage implements OnInit {
 
   setErrorMessage(value: string | null){
     this.errorMessage.set(value);
+  }
+
+  setFP(value: boolean){
+    if(value){
+      this.fpForm = new FormGroup({
+        email: new FormControl(null, {validators: [Validators.required, Validators.email]})
+      });
+    }
+    this.isFPmodal.set(value);
+  }
+
+  setIsForgot(value: boolean){
+    this.isForgot.set(value);
+  }
+
+  onFpSubmit() {
+    if(this.fpForm.invalid) {
+      this.fpForm.markAllAsTouched();
+      return;
+    }
+
+    console.log(this.fpForm.value);
+    const {email} = this.fpForm.value;
+    this.resetPassword(email);
+  }
+
+  async resetPassword(email: string){
+    try {
+      this.setIsForgot(true);
+
+      console.log(email)
+      await this.auth.resetPassword(email);
+      this.setIsForgot(false);
+      this.setFP(false);
+
+      this.setErrorMessage('Reset password link sent to your emaul successfully');
+    } catch (error) {
+      console.error(error);
+      this.setErrorMessage('Could not send reset password link, please try again');
+    }
+
   }
 
 }

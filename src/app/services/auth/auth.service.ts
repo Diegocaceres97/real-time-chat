@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from '@angular/fire/auth';
+import { Auth, createUserWithEmailAndPassword, getAuth, sendPasswordResetEmail, signInWithEmailAndPassword } from '@angular/fire/auth';
 import { ApiService } from '../api/api.service';
 
 @Injectable({
@@ -75,5 +75,15 @@ this.setData(id);
   randomIntFromInterval(min: number, max: number) {
     // min and max included
     return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+
+  async resetPassword(email: string) {
+    try {
+       await sendPasswordResetEmail(this.fireAuth,email);
+
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 }

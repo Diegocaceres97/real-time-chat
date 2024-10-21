@@ -1,66 +1,61 @@
 <ion-content [fullscreen]="true">
+  <div align="center" class="logo">
+    <ion-text color="primary"> FIRE CHAT </ion-text>
+  </div>
 
-    <div align="center" class="logo">
-      <ion-text color="primary">
-        FIRE CHAT
-      </ion-text>
+  <ion-card class="ion-padding">
+    <form [formGroup]="form">
+      <ion-input
+        placeholder="email"
+        type="email"
+        class="ion-margin-bottom"
+        formControlName="email"
+        formArrayName="email"
+        errorText="*Please enter your email"
+      >
+        <ion-icon name="mail-outline" slot="start" color="dark"></ion-icon
+      ></ion-input>
+
+      <ion-input
+        placeholder="password"
+        type="password"
+        formControlName="password"
+        [errorText]="form.get('password')?.hasError('minlength') ? '*Password must be at least 6 characters long' : '*please enter your password'"
+      >
+        <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+        <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+      </ion-input>
+
+      <div align="right">
+        <ion-button fill="clear" size="small" color="medium" (click)="setFP(true)">
+          Forgot password?
+        </ion-button>
       </div>
 
-      <ion-card class="ion-padding">
-        <form [formGroup]="form">
-          <ion-input
-            placeholder="email"
-            type="email"
-            class="ion-margin-bottom"
-            formControlName="email"
-            formArrayName="email"
-            errorText="*Please enter your email"
-          >
-            <ion-icon name="mail-outline" slot="start" color="dark"></ion-icon
-          ></ion-input>
-
-          <ion-input
-            placeholder="password"
-            type="password"
-            formControlName="password"
-            [errorText]="form.get('password')?.hasError('minlength') ? '*Password must be at least 6 characters long' : '*please enter your password'"
-          >
-            <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
-            <ion-input-password-toggle slot="end"></ion-input-password-toggle>
-          </ion-input>
-
-          <div align="right">
-            <ion-button fill="clear" size="small" color="medium">
-              Forgot password?
-            </ion-button>
-          </div>
-
-          @if(!isLogin()){
-          <ion-button
-            size="large"
-            expand="block"
-            type="submit"
-            class="ion-margin-top ion-padding-top"
-            [strong]="true"
-            (click)="onSubmit()"
-          >
-            <ion-text>Login</ion-text>
-          </ion-button>
-          } @else {
-          <ion-button
-            size="large"
-            expand="block"
-            type="submit"
-            class="ion-margin-top ion-padding-top"
-            [strong]="true"
-          >
-            <ion-spinner name="crescent"> </ion-spinner>
-          </ion-button>
-          }
-        </form>
-      </ion-card>
-
-
+      @if(!isLogin()){
+      <ion-button
+        size="large"
+        expand="block"
+        type="submit"
+        class="ion-margin-top ion-padding-top"
+        [strong]="true"
+        (click)="onSubmit()"
+      >
+        <ion-text>Login</ion-text>
+      </ion-button>
+      } @else {
+      <ion-button
+        size="large"
+        expand="block"
+        type="submit"
+        class="ion-margin-top ion-padding-top"
+        [strong]="true"
+      >
+        <ion-spinner name="crescent"> </ion-spinner>
+      </ion-button>
+      }
+    </form>
+  </ion-card>
 </ion-content>
 <ion-footer class="ion-no-border">
   <ion-toolbar>
@@ -87,21 +82,56 @@
   >
   </ion-alert>
 
-  <ion-modal [isOpen]="" (didDismiss)="null" [breakpoints]="[0.5,0.9,1]" [initialBreakpoint]="0.8">
+  <!--Forgot password modal-->
+
+  <ion-modal
+    [isOpen]="isFPmodal()"
+    (didDismiss)="setFP(false)"
+    [breakpoints]="[0.5,0.9,1]"
+    [initialBreakpoint]="0.8"
+  >
     <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Reset password</ion-title>
+        </ion-toolbar>
+      </ion-header>
       <ion-content>
-        <ion-input
-        placeholder="email"
-        type="email"
-        class="ion-margin"
-        formControlName="email"
-        formArrayName="email"
-        errorText="*Please enter your email"
-      >
-        <ion-icon name="mail-outline" slot="start" color="dark"></ion-icon
-      ></ion-input>
+        <form [formGroup]="fpForm">
+          <div class="ion-margin ion-padding">
+            <ion-input
+            placeholder="email"
+            type="email"
+            formControlName="email"
+            errorText="*Please enter your email"
+          >
+            <ion-icon name="mail-outline" slot="start" color="dark"></ion-icon
+          ></ion-input>
+          </div>
+        </form>
 
-
+        @if(!isForgot()){
+        <ion-button
+          size="large"
+          expand="block"
+          type="submit"
+          class="ion-margin ion-padding-top"
+          [strong]="true"
+          (click)="onFpSubmit()"
+        >
+          <ion-text>Login</ion-text>
+        </ion-button>
+        } @else {
+        <ion-button
+          size="large"
+          expand="block"
+          type="submit"
+          class="ion-margin ion-padding-top"
+          [strong]="true"
+        >
+          <ion-spinner name="crescent"> </ion-spinner>
+        </ion-button>
+        }
       </ion-content>
     </ng-template>
   </ion-modal>
