@@ -1,6 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, getAuth, sendPasswordResetEmail, signInWithEmailAndPassword } from '@angular/fire/auth';
+import { Auth, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, User } from '@angular/fire/auth';
 import { ApiService } from '../api/api.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +10,7 @@ export class AuthService {
 
   uid = signal<string|null>(null);
   private fireAuth = inject(Auth);
+  private router = inject(Router);
   private api = inject(ApiService);
 
   constructor() { }
@@ -85,5 +87,20 @@ this.setData(id);
       console.error(error);
       throw error;
     }
+  }
+
+  checkAuth(): Promise<User|null|Error> {
+    return new Promise((resolve, reject) => {
+      onAuthStateChanged(this.fireAuth, (user) => {
+      resolve(user);
+      }, (error)=> {
+        reject(error);
+        console.error(error);
+      })
+    })
+  }
+
+  navigateByUrl(path: string) {
+    this.router.navigateByUrl(path, {replaceUrl: true});
   }
 }

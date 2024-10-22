@@ -4,7 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { IonContent, IonInputPasswordToggle, IonHeader, IonTitle, IonToolbar, IonInput, IonIcon, IonList, IonTabButton, IonButton, IonSkeletonText, IonText, IonSpinner, IonFooter, IonItem, IonCard, IonAlert, IonModal } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { lockClosedOutline, mailOutline } from 'ionicons/icons';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
@@ -21,7 +21,7 @@ export class LoginPage implements OnInit {
   isLogin = signal<boolean>(false);
   isForgot = signal<boolean>(false);
   isFPmodal = signal<boolean>(false);
-  private router = inject(Router);
+  //private router = inject(Router);
   private auth = inject(AuthService);
   errorMessage = signal<string | null>(null);
 
@@ -60,7 +60,7 @@ export class LoginPage implements OnInit {
       await this.auth.login(formValue.email, formValue.password);
       this.setIsLogin(false);
       //navigate to tabs screen
-      this.router.navigateByUrl('/tabs', {replaceUrl: true});
+      this.auth.navigateByUrl('/tabs');
 
 
       this.form.reset();
