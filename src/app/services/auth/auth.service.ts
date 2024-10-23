@@ -15,14 +15,14 @@ export class AuthService {
 
   constructor() { }
 
-  setData(uid: string | null) {
+ /*  setData(uid: string | null) {
     if(!this.uid())this.uid.set(uid);
-  }
+  } */
 
   getId() {
     const auth = getAuth();
     const uid = auth.currentUser?.uid || null;
-    this.setData(uid);
+    //this.setData(uid);
     return uid;
   }
 
@@ -37,7 +37,7 @@ export class AuthService {
       if(response?.user) {
         //save data
 
-        this.setData(response.user.uid);
+        //this.setData(response.user.uid);
 
       }
     } catch (error) {
@@ -65,7 +65,7 @@ export class AuthService {
 
       //set data in database
 await this.api.setData(`users/${id}`, userData);
-this.setData(id);
+//this.setData(id);
 
       return {id};
     } catch (error) {
@@ -102,5 +102,32 @@ this.setData(id);
 
   navigateByUrl(path: string) {
     this.router.navigateByUrl(path, {replaceUrl: true});
+  }
+
+  async getUserData(id: string) {
+    try {
+      const userRef = this.api.getRef(`users/${id}`);
+      const snapshot = await this.api.getData(userRef);
+      if(snapshot?.exists()){
+        return snapshot.val();
+      } else {
+        throw new Error('User not found');
+      }
+
+    } catch (error) {
+      console.error('error data fetching ', error);
+      throw error;
+    }
+  }
+
+  async logout() {
+    try {
+      await this.fireAuth.signOut();
+      //this.uid.set(null);
+      this.navigateByUrl('/login');
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 }
