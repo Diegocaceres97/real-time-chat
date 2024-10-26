@@ -11,7 +11,7 @@
 
 <ion-content [fullscreen]="true">
   <ion-list lines="none">
-    @for(user of users; track $index){
+    @for(user of users(); track $index){
     <ion-item color="tertiary">
       <ion-avatar slot="start">
         <img [src]="'https://i.pravatar.cc/315'" />

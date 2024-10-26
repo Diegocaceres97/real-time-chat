@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonItem, IonAvatar, IonList, IonImg, IonLabel, IonButtons, IonTabButton, IonButton, IonIcon, IonModal } from '@ionic/angular/standalone';
@@ -6,6 +6,7 @@ import { addIcons } from 'ionicons';
 import { addCircle, arrowBack } from 'ionicons/icons';
 import { UsersComponent } from 'src/app/components/users/users.component';
 import { ChatRoomService } from 'src/app/services/chat-room.service';
+import { User } from 'src/app/interfaces/user';
 
 @Component({
   selector: 'app-chats',
@@ -19,6 +20,7 @@ export class ChatsPage implements OnInit {
   chats = Array(10);
   isNewChat = signal<boolean>(false);
   private chatroom = inject(ChatRoomService);
+  users = computed<User[] | null>(() => this.chatroom.users());
 
   constructor() {
     addIcons({
@@ -32,7 +34,7 @@ export class ChatsPage implements OnInit {
 
   setIsNewChat(value: boolean) {
     //call users data
-    this.chatroom.getUsers();
+    if(!this.users() || this.users()?.length === 0) this.chatroom.getUsers();
     this.isNewChat.set(value);
 
   }

@@ -15,14 +15,14 @@ export class AuthService {
 
   constructor() { }
 
- /*  setData(uid: string | null) {
+  setData(uid: string | null) {
     if(!this.uid())this.uid.set(uid);
-  } */
+  }
 
   getId() {
     const auth = getAuth();
     const uid = auth.currentUser?.uid || null;
-    //this.setData(uid);
+    this.setData(uid);
     return uid;
   }
 
@@ -37,7 +37,7 @@ export class AuthService {
       if(response?.user) {
         //save data
 
-        //this.setData(response.user.uid);
+        this.setData(response.user.uid);
 
       }
     } catch (error) {
@@ -65,7 +65,7 @@ export class AuthService {
 
       //set data in database
 await this.api.setData(`users/${id}`, userData);
-//this.setData(id);
+    this.setData(id);
 
       return {id};
     } catch (error) {
@@ -123,7 +123,7 @@ await this.api.setData(`users/${id}`, userData);
   async logout() {
     try {
       await this.fireAuth.signOut();
-      //this.uid.set(null);
+      this.uid.set(null);
       this.navigateByUrl('/login');
     } catch (error) {
       console.error(error);

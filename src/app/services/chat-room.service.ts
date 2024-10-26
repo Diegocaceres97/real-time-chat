@@ -1,6 +1,8 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { ApiService } from './api/api.service';
 import { onValue } from '@angular/fire/database';
+import { AuthService } from './auth/auth.service';
+import { User } from '../interfaces/user';
 
 @Injectable({
   providedIn: 'root'
@@ -8,9 +10,13 @@ import { onValue } from '@angular/fire/database';
 export class ChatRoomService {
 
   private api = inject(ApiService);
-  users = signal<any[]>([]);
+  currentUser = computed(() => this.auth.uid());
+  users = signal<User[] | null>(null);
+  private auth = inject(AuthService);
 
-  constructor() { }
+  constructor() {
+    this.auth.getId();
+  }
 
   getUsers(){
     const userRef = this.api.getRef(`users`);
@@ -20,8 +26,19 @@ export class ChatRoomService {
       if(snapshot?.exists()){
         const users = snapshot.val();
         console.log(users);
-       // this.users.set(users);
+        //
+
+        const userArray: User[] = Object.values(users);
+        console.log(userArray);
+
+        const filteredUsers: User[] = userArray.filter(user => user.uid !== this.currentUser());
+        this.users.set(filteredUsers);
+      } else {
+        this.users.set([]);
       }
-    });
+    },
+      (error) => {
+        console.error('error fetching realtime users ', error);
+      });
   }
 }
