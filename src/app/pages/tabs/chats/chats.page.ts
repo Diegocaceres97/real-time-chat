@@ -7,6 +7,7 @@ import { addCircle, arrowBack } from 'ionicons/icons';
 import { UsersComponent } from 'src/app/components/users/users.component';
 import { ChatRoomService } from 'src/app/services/chat-room.service';
 import { User } from 'src/app/interfaces/user';
+import { NavigationExtras, Router } from '@angular/router';
 
 @Component({
   selector: 'app-chats',
@@ -21,6 +22,7 @@ export class ChatsPage implements OnInit {
   isNewChat = signal<boolean>(false);
   private chatroom = inject(ChatRoomService);
   users = computed<User[] | null>(() => this.chatroom.users());
+  private router = inject(Router);
 
   constructor() {
     addIcons({
@@ -37,6 +39,25 @@ export class ChatsPage implements OnInit {
     if(!this.users() || this.users()?.length === 0) this.chatroom.getUsers();
     this.isNewChat.set(value);
 
+  }
+
+  async startChat(user: User, modal: IonModal){
+    console.log(user);
+    try {
+      const room = await this.chatroom.createChatRoom([user.uid], user.name);
+      //dismiss modal
+      //navigate to chat room page
+      modal.dismiss();
+
+      const navData: NavigationExtras = {
+        queryParams: {
+          name: user?.name,
+        }
+      };
+      this.router.navigate(['/', 'tabs','chats', room?.id]);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
 }

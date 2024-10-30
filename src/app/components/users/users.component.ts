@@ -14,9 +14,14 @@ export class UsersComponent  implements OnInit {
   //public users = Array(10);
   close = output<boolean>();
   users = input<User[] | null>([]);
+  user = output<User>();
 
   constructor() { }
 
   ngOnInit() {}
+
+  startChat(user: User){
+    this.user.emit(user);
+  }
 
 }
