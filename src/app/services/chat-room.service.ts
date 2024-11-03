@@ -3,6 +3,7 @@ import { ApiService } from './api/api.service';
 import { onValue, query } from '@angular/fire/database';
 import { AuthService } from './auth/auth.service';
 import { User } from '../interfaces/user';
+import { ChatRoom } from '../interfaces/chat-room';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ export class ChatRoomService {
   private api = inject(ApiService);
   currentUser = computed(() => this.auth.uid());
   users = signal<User[] | null>(null);
+  chatrooms = signal<ChatRoom[] | null>(null);
   private auth = inject(AuthService);
 
   constructor() {
@@ -66,6 +68,7 @@ export class ChatRoomService {
       const privateChatRooms = Object.values(chatRooms).find((chatRoom:any) => chatRoom.type === 'private');
 
       if(privateChatRooms){
+        console.log(privateChatRooms);
         return privateChatRooms; //return existing private chat room
       }
     }
@@ -76,7 +79,7 @@ export class ChatRoomService {
     const chatRoomData = {
       roomId: chatRoomId,
       name: roomName,
-      userHash: userHash,
+      userHash,
       users: sortedUserList,
       type,
       createdAt: new Date().toISOString(),

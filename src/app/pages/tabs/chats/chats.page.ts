@@ -8,6 +8,7 @@ import { UsersComponent } from 'src/app/components/users/users.component';
 import { ChatRoomService } from 'src/app/services/chat-room.service';
 import { User } from 'src/app/interfaces/user';
 import { NavigationExtras, Router } from '@angular/router';
+import { ChatRoom } from 'src/app/interfaces/chat-room';
 
 @Component({
   selector: 'app-chats',
@@ -20,9 +21,10 @@ export class ChatsPage implements OnInit {
 
   chats = Array(10);
   isNewChat = signal<boolean>(false);
-  private chatroom = inject(ChatRoomService);
+  public chatroom = inject(ChatRoomService);
   users = computed<User[] | null>(() => this.chatroom.users());
   private router = inject(Router);
+  //chatrooms = computed<ChatRoom[] | null>(() =>this.chatroom.);
 
   constructor() {
     addIcons({
@@ -54,7 +56,9 @@ export class ChatsPage implements OnInit {
           name: user?.name,
         }
       };
-      this.router.navigate(['/', 'tabs','chats', room?.id]);
+
+      console.log(room);
+      this.router.navigate(['/', 'tabs','chats', room?.roomId],navData);
     } catch (error) {
       console.error(error);
     }
