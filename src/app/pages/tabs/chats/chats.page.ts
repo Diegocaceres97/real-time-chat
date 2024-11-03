@@ -19,12 +19,11 @@ import { ChatRoom } from 'src/app/interfaces/chat-room';
 })
 export class ChatsPage implements OnInit {
 
-  chats = Array(10);
   isNewChat = signal<boolean>(false);
   public chatroom = inject(ChatRoomService);
   users = computed<User[] | null>(() => this.chatroom.users());
   private router = inject(Router);
-  //chatrooms = computed<ChatRoom[] | null>(() =>this.chatroom.);
+  chatrooms = computed<ChatRoom[] | null>(() =>this.chatroom.chatrooms());
 
   constructor() {
     addIcons({

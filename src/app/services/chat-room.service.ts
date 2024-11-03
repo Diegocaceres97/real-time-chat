@@ -4,6 +4,7 @@ import { onValue, query } from '@angular/fire/database';
 import { AuthService } from './auth/auth.service';
 import { User } from '../interfaces/user';
 import { ChatRoom } from '../interfaces/chat-room';
+import { last } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,7 @@ export class ChatRoomService {
 
   constructor() {
     this.auth.getId();
+    this.getChartRooms();
   }
 
   getUsers(){
@@ -87,5 +89,90 @@ export class ChatRoomService {
 
     await this.api.setRefData(newChatRoom, chatRoomData);
     return chatRoomData;
+  }
+
+  getChartRooms(){
+    const chatRoomRef = this.api.getRef(`chatrooms`);
+
+    //listen to realtime users List
+    onValue(chatRoomRef, (snapshot:any) => {
+      if(snapshot?.exists()){
+        const chatRooms = snapshot.val();
+        console.log(chatRooms);
+
+       const chatroomKeys= Object.keys(chatRooms);
+
+       const chatRoomData = chatroomKeys.map((roomId:string) => {
+         const room = chatRooms[roomId];
+
+         //check if current user is part of the room
+
+         if(room.type=='private' && room.users.includes(this.currentUser())){
+          //find the other user in the room
+          const otherUser = room.users.find((user:any) => user !== this.currentUser());
+          //get the chat room data
+         /*  const chatRoom = chatRooms[otherUser];
+          console.log(chatRoom);
+          this.chatrooms.set([chatRoom]); */
+
+          //fetch the other user data and last message
+          return this.getUserDataAndLastMessage(
+            otherUser,
+            roomId,
+            room,
+            room.messages
+          );
+         }
+         return null;
+       });
+
+      //execute all promises and filter out null results
+       Promise.all(chatRoomData).then((chatRoomWithDetails:any) => {
+
+        const validateChatRooms = chatRoomWithDetails.filter((chatRoom:any) => chatRoom !== null);
+
+        this.chatrooms.set(validateChatRooms as ChatRoom[]);
+      })
+      .catch(e => console.error(e));
+      } else {
+        //not chat rooms found
+        this.chatrooms.set([]);
+      }
+    });
+  }
+
+  private async getUserDataAndLastMessage(otherUserId: string, roomId: string, room: any, messages:any){
+    try {
+      //fetch other user data
+      const userRef=this.api.getRef(`users/${otherUserId}`);
+      const snapshot = await this.api.getData(userRef);
+      const user = snapshot?.exists() ? snapshot.val() : null;
+
+      //fetch last message
+      let lastMessage:any = null;
+      if(messages){
+        const messagesArray= Object.values(messages);
+        const sortedMessages = messagesArray.sort((a:any, b:any) => b.timestamp - a.timestamp);
+
+        lastMessage = sortedMessages[0];
+      }
+      /*  lastMessage = messages ? Object.values(messages).sort((a:any, b:any) => b.timestamp - a.timestamp)[0] : null;
+      const lastMessageTimestamp = lastMessage?.timestamp; */
+
+      //create chat room object
+     const roomUserData: ChatRoom = {
+      roomId,
+      name: user?.name || null,
+      photo: user?.photo || null,
+      room,
+      lastMessage: lastMessage?.message || null,
+      lastMessageTimestamp: lastMessage?.timestamp || null,
+     };
+
+     return roomUserData;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
   }
 }

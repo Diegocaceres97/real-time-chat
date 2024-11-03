@@ -18,15 +18,17 @@
   </ion-header>
 
   <ion-list>
-    @for(chat of chats; track $index){
+    @for(chat of chatrooms(); track $index){
       <ion-item [detail]="true">
         <ion-avatar slot="start">
-          <ion-img [src]="'https://i.pravatar.cc/315'"></ion-img>
+          <ion-img [src]="chat?.photo ? chat?.photo :'https://gravatar.com/avatar/0?d=identicon'"></ion-img>
         </ion-avatar>
-
         <ion-label>
          {{chat?.name}}
-          <p>last message</p>
+         @if( chat?.lastMessage ){
+          <p>{{chat?.lastMessage}}</p>
+          <p>{{chat?.lastMessageTimestamp}}</p>
+         }
         </ion-label>
       </ion-item>
     }
