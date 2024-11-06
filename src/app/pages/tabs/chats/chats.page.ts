@@ -9,13 +9,15 @@ import { ChatRoomService } from 'src/app/services/chat-room.service';
 import { User } from 'src/app/interfaces/user';
 import { NavigationExtras, Router } from '@angular/router';
 import { ChatRoom } from 'src/app/interfaces/chat-room';
+import { empty } from 'rxjs';
+import { EmptyScreenComponent } from 'src/app/components/empty-screen/empty-screen.component';
 
 @Component({
   selector: 'app-chats',
   templateUrl: './chats.page.html',
   styleUrls: ['./chats.page.scss'],
   standalone: true,
-  imports: [IonModal, IonIcon, IonButton, IonTabButton, IonButtons, IonLabel, IonImg, IonList, IonAvatar, IonItem, IonContent, IonHeader, IonTitle, IonToolbar, UsersComponent]
+  imports: [IonModal, IonIcon, IonButton, IonTabButton, IonButtons, IonLabel, IonImg, IonList, IonAvatar, IonItem, IonContent, IonHeader, IonTitle, IonToolbar, UsersComponent,EmptyScreenComponent]
 })
 export class ChatsPage implements OnInit {
 
@@ -24,6 +26,12 @@ export class ChatsPage implements OnInit {
   users = computed<User[] | null>(() => this.chatroom.users());
   private router = inject(Router);
   chatrooms = computed<ChatRoom[] | null>(() =>this.chatroom.chatrooms());
+
+model = {
+  icon: 'chatbubbles-outline',
+  title: 'No chat rooms found',
+  color: 'primary'
+}
 
   constructor() {
     addIcons({
@@ -61,6 +69,27 @@ export class ChatsPage implements OnInit {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  getChat(chatroom: ChatRoom){
+  const navData: NavigationExtras = {
+    queryParams: {
+      name: chatroom?.name,
+    }
+  };
+
+  this.router.navigate(['/', 'tabs','chats', chatroom?.roomId],navData);
+  }
+
+
+  navigateToChat(name: string, id: string) {
+    const navData: NavigationExtras = {
+      queryParams: {
+        name: name,
+      }
+    };
+
+    this.router.navigate(['/', 'tabs','chats', id],navData);
   }
 
 }

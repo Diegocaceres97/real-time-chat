@@ -17,24 +17,30 @@
     </ion-toolbar>
   </ion-header>
 
+@let chatroomsArray = chatrooms();
+
+@if(chatroomsArray && chatroomsArray?.length! >0 ){
   <ion-list>
-    @for(chat of chatrooms(); track $index){
-      <ion-item [detail]="true">
+    @for(chat of chatroomsArray; track $index){
+      <ion-item [detail]="true" (click)="getChat(chat)">
         <ion-avatar slot="start">
           <ion-img [src]="chat?.photo ? chat?.photo :'https://gravatar.com/avatar/0?d=identicon'"></ion-img>
         </ion-avatar>
         <ion-label>
          {{chat?.name}}
          @if( chat?.lastMessage ){
-          <p>{{chat?.lastMessage}}</p>
+          <p> {{chat?.lastMessage}}</p>
           <p>{{chat?.lastMessageTimestamp}}</p>
          }
         </ion-label>
       </ion-item>
     }
 
-
   </ion-list>
+}@else {
+  <app-empty-screen [model]="model"></app-empty-screen>
+}
+
 
   <ion-modal #usersModal [isOpen]="isNewChat()" (didDismiss)="setIsNewChat(false)">
     <ng-template>

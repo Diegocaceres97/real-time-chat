@@ -19,7 +19,7 @@ export class ChatRoomService {
 
   constructor() {
     this.auth.getId();
-    this.getChartRooms();
+    //this.getChartRooms();
   }
 
   getUsers(){
