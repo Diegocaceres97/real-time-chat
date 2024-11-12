@@ -58,31 +58,18 @@ model = {
       //navigate to chat room page
       modal.dismiss();
 
-      const navData: NavigationExtras = {
-        queryParams: {
-          name: user?.name,
-        }
-      };
-
-      console.log(room);
-      this.router.navigate(['/', 'tabs','chats', room?.roomId],navData);
+      this.navigateToChat(user.name, room?.roomId);
     } catch (error) {
       console.error(error);
     }
   }
 
   getChat(chatroom: ChatRoom){
-  const navData: NavigationExtras = {
-    queryParams: {
-      name: chatroom?.name,
-    }
-  };
-
-  this.router.navigate(['/', 'tabs','chats', chatroom?.roomId],navData);
+    this.navigateToChat(chatroom?.name, chatroom.roomId);
   }
 
 
-  navigateToChat(name: string, id: string) {
+  navigateToChat(name: string | null, id: string) {
     const navData: NavigationExtras = {
       queryParams: {
         name: name,

@@ -1,13 +1,40 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>chat</ion-title>
+    <ion-text color="primary" slot="primary" class="ion-text-center">
+      <!-- <ion-title>-el nombre no se ve en modo oscuro-</ion-title> -->
+    </ion-text>
+
+    <ion-buttons slot="start">
+      <ion-buttons slot="start">
+        <ion-back-button
+          defaultHref="/tabs/chats"
+          color="medium"
+        ></ion-back-button>
+      </ion-buttons>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">chat</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  @let chatsArray = chats(); @if(chatsArray && chatsArray?.length! >0 ){
+  <ion-list>
+    @for(chat of chatsArray; track $index){
+    <app-check-box [chat]="chat"></app-check-box>
+    }
+  </ion-list>
+  }@else {
+  <app-empty-screen [model]="model"></app-empty-screen>
+  }
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-textarea
+      autoGrow
+      row="1"
+      placeholder="Send message"
+      class="ion-text-center"
+      [(ngModel)]="message"
+    ></ion-textarea>
+  </ion-toolbar>
+</ion-footer>
