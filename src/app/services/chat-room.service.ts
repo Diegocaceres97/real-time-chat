@@ -48,7 +48,8 @@ export class ChatRoomService {
 
   async createChatRoom(userIds: string[], roomName: string, type: string = 'private'): Promise<any>{
 
-   const chatRoomRef = this.api.getRef(`chatrooms`);
+    try {
+      const chatRoomRef = this.api.getRef(`chatrooms`);
     const userIdsRef = this.api.getRef(`users`);
     const userList = [this.currentUser(), ...userIds];
     const sortedUserList = userList.sort();
@@ -89,6 +90,10 @@ export class ChatRoomService {
 
     await this.api.setRefData(newChatRoom, chatRoomData);
     return chatRoomData;
+    } catch (error) {
+      throw error;
+    }
+
   }
 
   getChartRooms(){

@@ -16,7 +16,8 @@
 </ion-header>
 
 <ion-content>
-  @let chatsArray = chats(); @if(chatsArray && chatsArray?.length! >0 ){
+  @let chatsArray = chats();
+  @if(chatsArray && chatsArray?.length! >0 ){
   <ion-list>
     @for(chat of chatsArray; track $index){
     <app-check-box [chat]="chat"></app-check-box>
@@ -39,8 +40,8 @@
 
     @if(isLoading()) {
       <!--show spinner-->
-      <ion-button slot="end" size="large" (click)="sendMessage()">
-        <ion-icon name="send" slot="crescent"></ion-icon>
+      <ion-button slot="end" size="large">
+        <ion-icon name="crescent"></ion-icon>
       </ion-button>
     } @else {
       <ion-button slot="end" size="large" (click)="sendMessage()">

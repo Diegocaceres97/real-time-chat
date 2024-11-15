@@ -1,5 +1,5 @@
 import { set } from '@angular/fire/database';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -65,9 +65,9 @@ export class ChatPage implements OnInit {
     color: 'primary',
   };
 
-  private chatService = inject(ChatService);
+  chats = computed(() => this.chatService.chatMessages());
 
-  chats = signal([]);
+  private chatService = inject(ChatService);
 
   constructor() {
     addIcons({ send, add, checkmarkDoneOutline, chatbubblesOutline });
@@ -86,6 +86,8 @@ export class ChatPage implements OnInit {
     }
 
     this.id.set(id);
+
+    this.chatService.getChatMessages(id);
   }
 
   async sendMessage() {
@@ -96,8 +98,10 @@ export class ChatPage implements OnInit {
 
     try {
       this.setIsLoading(true);
+      console.log(this.message());
+      console.log(this.id());
       await this.chatService.sendMesage(this.id(), this.message() as string);
-      this.message.set(null);
+      this.message.set('');
       this.setIsLoading(false);
     } catch (error) {
       console.log(error);
