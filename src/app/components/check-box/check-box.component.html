@@ -1,8 +1,11 @@
 @defer(when chat()){
-<ion-item lines="none" [class]="chat()?.isCurrentUser ? 'current-user' : 'other-user'">
+<ion-item
+  *ngIf="chat() && chat()?.message && (chat()?.message)!.length > 0"
+  lines="none"
+  [class]="chat()?.isCurrentUser ? 'current-user' : 'other-user'"
+>
   <div
     class="ion-text-wrap container"
-    *ngIf="chat() && chat()?.message && chat()?.message!.length > 0"
     [slot]="chat()?.isCurrentUser ? 'end' : 'start'"
   >
     <ion-text>
@@ -11,9 +14,8 @@
     <ion-note>
       <small>{{ chat()?.timestamp | date : "HH:mm" }}</small>
       @if(chat()?.isCurrentUser){
-        <ion-icon name="checkmark-done-outline"></ion-icon>
+      <ion-icon name="checkmark-done-outline"></ion-icon>
       }
-
     </ion-note>
   </div>
 </ion-item>

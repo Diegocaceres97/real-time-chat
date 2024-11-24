@@ -1,5 +1,5 @@
 import { set } from '@angular/fire/database';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -54,6 +54,7 @@ import { ChatService } from 'src/app/services/chat/chat.service';
   ],
 })
 export class ChatPage implements OnInit {
+  content = viewChild<IonContent>(IonContent);
   isLoading = signal<boolean>(false);
   private route = inject(ActivatedRoute);
   name = signal<string | null>(null);
@@ -70,6 +71,13 @@ export class ChatPage implements OnInit {
   private chatService = inject(ChatService);
 
   constructor() {
+    effect(() => {
+      if(this.chats() && this.chats()?.length > 0) {
+        setTimeout(() => {
+          this.scrollToBottom();
+        }, 500);
+      }
+    });
     addIcons({ send, add, checkmarkDoneOutline, chatbubblesOutline });
   }
 
@@ -103,10 +111,16 @@ export class ChatPage implements OnInit {
       await this.chatService.sendMesage(this.id(), this.message() as string);
       this.message.set('');
       this.setIsLoading(false);
+
+      this.scrollToBottom();
     } catch (error) {
       console.log(error);
       this.setIsLoading(false);
     }
+  }
+
+  scrollToBottom() {
+    this.content()?.scrollToBottom(500);
   }
 
   setIsLoading(value: boolean) {
