@@ -1,10 +1,11 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { ApiService } from './api/api.service';
-import { onValue, query } from '@angular/fire/database';
+import { DatabaseReference, off, onValue, query } from '@angular/fire/database';
 import { AuthService } from './auth/auth.service';
 import { User } from '../interfaces/user';
 import { ChatRoom } from '../interfaces/chat-room';
 import { last } from 'rxjs';
+import { Data } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,10 @@ export class ChatRoomService {
   users = signal<User[] | null>(null);
   chatrooms = signal<ChatRoom[] | null>(null);
   private auth = inject(AuthService);
+  private chatroomsRef: DatabaseReference | null = null;
+  private userRef: DatabaseReference | null = null;
+  private chatroomListener: any = null;
+  private userListener: any = null;
 
   constructor() {
     this.auth.getId();
@@ -23,10 +28,10 @@ export class ChatRoomService {
   }
 
   getUsers(){
-    const userRef = this.api.getRef(`users`);
+    this.userRef = this.api.getRef(`users`);
 
     //listen to realtime users List
-    onValue(userRef, (snapshot) => {
+    this.userListener = onValue(this.userRef, (snapshot) => {
       if(snapshot?.exists()){
         const users = snapshot.val();
         console.log(users);
@@ -97,10 +102,10 @@ export class ChatRoomService {
   }
 
   getChartRooms(){
-    const chatRoomRef = this.api.getRef(`chatrooms`);
+     this.chatroomsRef = this.api.getRef(`chatrooms`);
 
     //listen to realtime users List
-    onValue(chatRoomRef, (snapshot:any) => {
+    this.chatroomListener = onValue(this.chatroomsRef, (snapshot:any) => {
       if(snapshot?.exists()){
         const chatRooms = snapshot.val();
         console.log(chatRooms);
@@ -179,5 +184,25 @@ export class ChatRoomService {
       console.error(error);
       return null;
     }
+  }
+
+  unsubscribeChatrooms(){
+    if(this.chatroomsRef){
+      this.chatroomsRef=null; //unsubscribe from the listener
+      this.chatroomListener = null;
+    }
+  }
+
+  unsubscribeUsers(){
+    if(this.userRef){
+      off(this.userRef, 'value', this.userListener);
+      this.userRef = null; //unsubscribe from the listener
+      this.userListener = null;
+    }
+  }
+
+  unsubscribeChatroomsAndUsers(){
+    this.unsubscribeChatrooms();
+    this.unsubscribeUsers();
   }
 }

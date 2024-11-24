@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonItem, IonAvatar, IonList, IonImg, IonLabel, IonButtons, IonTabButton, IonButton, IonIcon, IonModal } from '@ionic/angular/standalone';
@@ -19,7 +19,7 @@ import { EmptyScreenComponent } from 'src/app/components/empty-screen/empty-scre
   standalone: true,
   imports: [IonModal, IonIcon, IonButton, IonTabButton, IonButtons, IonLabel, IonImg, IonList, IonAvatar, IonItem, IonContent, IonHeader, IonTitle, IonToolbar, UsersComponent,EmptyScreenComponent]
 })
-export class ChatsPage implements OnInit {
+export class ChatsPage implements OnInit, OnDestroy {
 
   isNewChat = signal<boolean>(false);
   public chatroom = inject(ChatRoomService);
@@ -38,6 +38,9 @@ model = {
       addCircle,
       arrowBack
     });
+  }
+  ngOnDestroy(): void {
+   this.chatroom.unsubscribeChatroomsAndUsers();
   }
 
   ngOnInit() {

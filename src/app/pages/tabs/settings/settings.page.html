@@ -5,9 +5,13 @@
 </ion-header>
 
 <ion-content >
-  <ion-list>
+  <ion-list lines="full">
     <ion-item (click)="logout()">
       <ion-label>Logout</ion-label>
+
+      <ion-button  fill="clear" slot="end" color="danger" size="large">
+        <ion-icon slot="icon-only" name="power"></ion-icon>
+      </ion-button>
     </ion-item>
   </ion-list>
 </ion-content>

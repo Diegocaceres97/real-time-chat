@@ -2,7 +2,7 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { ApiService } from '../api/api.service';
 import { Chat } from 'src/app/interface/chat';
 import { AuthService } from '../auth/auth.service';
-import { onValue } from '@angular/fire/database';
+import { DatabaseReference, off, onValue } from '@angular/fire/database';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +13,8 @@ export class ChatService {
   private api =inject(ApiService);
   currentUserId = computed(() => this.auth.uid);
   chatMessages = signal<Chat[]>([]);
+  private chatRef: DatabaseReference | null = null;
+  private chatsListener: any = null;
 
   constructor() {
     this.auth.getId();
@@ -38,10 +40,10 @@ export class ChatService {
   }
 
   getChatMessages(chatroomId:string){
-    const chatRoomRef = this.api.getRef(`chatrooms/${chatroomId}`);
+    this.chatRef = this.api.getRef(`chatrooms/${chatroomId}`);
 
     //listen to realtime updates to the chat messages within the chatroom
-    onValue(chatRoomRef, (snapshot:any) => {
+    this.chatsListener = onValue(this.chatRef, (snapshot:any) => {
       if(snapshot?.exists()){
         const messages = snapshot.val();
         console.log(messages);
@@ -61,5 +63,14 @@ export class ChatService {
         console.error('error fetching realtime chat messages ', error);
       }
     );
+  }
+
+  unsubscribeChatrooms(){
+    if(this.chatRef){//reset the ref
+
+      off(this.chatRef, 'value', this.chatsListener);
+      this.chatRef = null;
+      this.chatsListener = null;
+    }
   }
 }

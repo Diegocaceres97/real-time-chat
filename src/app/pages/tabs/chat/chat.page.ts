@@ -1,5 +1,5 @@
 import { set } from '@angular/fire/database';
-import { Component, computed, effect, inject, OnInit, signal, viewChild } from '@angular/core';
+import { Component, computed, effect, inject, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -53,7 +53,7 @@ import { ChatService } from 'src/app/services/chat/chat.service';
     FormsModule,
   ],
 })
-export class ChatPage implements OnInit {
+export class ChatPage implements OnInit, OnDestroy {
   content = viewChild<IonContent>(IonContent);
   isLoading = signal<boolean>(false);
   private route = inject(ActivatedRoute);
@@ -125,5 +125,9 @@ export class ChatPage implements OnInit {
 
   setIsLoading(value: boolean) {
     this.isLoading.set(value);
+  }
+
+  ngOnDestroy() {
+    this.chatService.unsubscribeChatrooms();
   }
 }
