@@ -24,7 +24,7 @@
     @for(chat of chatroomsArray; track $index){
       <ion-item [detail]="true" (click)="getChat(chat)">
         <ion-avatar slot="start">
-          <ion-img [src]="chat?.photo ? chat?.photo :'https://gravatar.com/avatar/0?d=identicon'"></ion-img>
+          <ion-img src="https://gravatar.com/avatar/0?d=identicon"></ion-img>
         </ion-avatar>
         <ion-label>
          {{chat?.name}}

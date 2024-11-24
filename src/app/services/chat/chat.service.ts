@@ -45,10 +45,11 @@ export class ChatService {
       if(snapshot?.exists()){
         const messages = snapshot.val();
         console.log(messages);
+        console.log(this.currentUserId().toString());
         const messageArray: Chat[] = Object.keys(messages).map(messageId => ({
           id: messageId,
           ...messages[messageId],
-          isCurrentUser: messages[messageId].senderId === this.currentUserId() ? true : false,
+          isCurrentUser: messages[messageId].senderId === this.currentUserId().toString() ? true : false,
         }));
         this.chatMessages.set(messageArray);
         console.log('por aca')
