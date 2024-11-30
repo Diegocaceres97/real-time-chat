@@ -22,7 +22,9 @@ export class ChatRoomService {
   private chatroomListener: any = null;
   private userListener: any = null;
 
-  constructor() {
+  constructor() {}
+
+  init(){
     this.auth.getId();
     this.getChartRooms();
   }
@@ -188,6 +190,7 @@ export class ChatRoomService {
 
   unsubscribeChatrooms(){
     if(this.chatroomsRef){
+      off(this.chatroomsRef, 'value', this.chatroomListener);
       this.chatroomsRef=null; //unsubscribe from the listener
       this.chatroomListener = null;
     }
@@ -201,8 +204,17 @@ export class ChatRoomService {
     }
   }
 
-  unsubscribeChatroomsAndUsers(){
+ /*  unsubscribeChatroomsAndUsers(){
     this.unsubscribeChatrooms();
     this.unsubscribeUsers();
+  } */
+
+  //new cleanup method
+  cleanup(){
+
+    this.unsubscribeChatrooms();
+    this.unsubscribeUsers();
+    this.users.set(null);
+    this.chatrooms.set(null);
   }
 }

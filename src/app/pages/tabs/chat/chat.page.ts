@@ -72,7 +72,7 @@ export class ChatPage implements OnInit, OnDestroy {
 
   constructor() {
     effect(() => {
-      if(this.chats() && this.chats()?.length > 0) {
+      if(this.chats() && this.chats()!.length > 0) {
         setTimeout(() => {
           this.scrollToBottom();
         }, 500);
@@ -95,7 +95,7 @@ export class ChatPage implements OnInit, OnDestroy {
 
     this.id.set(id);
 
-    this.chatService.getChatMessages(id);
+    this.chatService.init(id);
   }
 
   async sendMessage() {

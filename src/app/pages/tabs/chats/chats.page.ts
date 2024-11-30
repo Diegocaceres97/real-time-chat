@@ -40,10 +40,11 @@ model = {
     });
   }
   ngOnDestroy(): void {
-   this.chatroom.unsubscribeChatroomsAndUsers();
+   this.chatroom.cleanup();
   }
 
   ngOnInit() {
+    this.chatroom.init();
   }
 
   setIsNewChat(value: boolean) {

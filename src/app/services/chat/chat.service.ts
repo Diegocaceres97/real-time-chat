@@ -12,13 +12,16 @@ export class ChatService {
   private auth = inject(AuthService);
   private api =inject(ApiService);
   currentUserId = computed(() => this.auth.uid);
-  chatMessages = signal<Chat[]>([]);
+  chatMessages = signal<Chat[] | null>([]);
   private chatRef: DatabaseReference | null = null;
   private chatsListener: any = null;
 
-  constructor() {
+  constructor() { }
+
+  init(chatroomid: string){
     this.auth.getId();
-   }
+    this.getChatMessages(chatroomid);
+  }
 
   async sendMesage(chatroomId:string, message:string){
     try {
@@ -71,6 +74,8 @@ export class ChatService {
       off(this.chatRef, 'value', this.chatsListener);
       this.chatRef = null;
       this.chatsListener = null;
+
+      this.chatMessages.set(null);
     }
   }
 }
