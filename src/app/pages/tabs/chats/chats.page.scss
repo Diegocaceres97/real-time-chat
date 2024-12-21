@@ -6,6 +6,9 @@ ion-list {
       p {
         font-size: 0.85rem;
         margin-top: 3px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
   }

@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'ionic-chat-app',
+  appId: 'com.diego.ionicchat',
+  appName: 'Fire Chat',
   webDir: 'www'
 };
 
